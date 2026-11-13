@@ -1,0 +1,41 @@
+# Secrets: never commit API keys (brief, section 8)
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Data pack: kept out of git and never altered. See data/README.md
+data/raw/*
+data/interim/*
+data/processed/*
+!data/**/.gitkeep
+!data/raw/README.md
+
+# Trained model artefacts (large, reproducible from code)
+models/*
+!models/.gitkeep
+*.pt
+*.pth
+*.onnx
+*.joblib
+*.pkl
+
+# Experiment tracking output
+optuna*.db
+mlruns/
+lightning_logs/
+
+# Editors, OS, Office lock files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+~$*
