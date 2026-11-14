@@ -76,7 +76,7 @@ git clone https://github.com/rider-26/AI-Innovation-with-Deep-Learning.git
 cd AI-Innovation-with-Deep-Learning
 uv sync                         # creates .venv and installs the modelling libraries
 uv run python -m pytest         # should pass
-uv run python -m jupyter lab    # open the notebooks
+uv run python -m jupyterlab     # open the notebooks
 ```
 
 Run tools as `python -m <tool>`. Some of our laptops block the bare `pytest` and `jupyter`
@@ -106,8 +106,16 @@ data/
   synthetic/    anything we generate, labelled as synthetic
 notebooks/      audit, EDA, baselines, one deep learning notebook per member
 src/shopsphere/ shared Python package
-  config.py     seed, cutoff date, paths, split fractions
-  split.py      the one train / validation / test split everyone uses
+  config.py       seed, cutoff date, paths, split fractions, feature column names
+  split.py        the one train / validation / test split everyone uses
+  data.py         loads features.csv, checks the data contract, attaches labels
+  preprocess.py   imputation, scaling and one-hot encoding (fitted on train only)
+  baselines.py    always-0, recency rule, logistic regression, LightGBM
+  model.py        the MLP and its hyperparameters
+  train.py        training loop: class weighting, early stopping
+  tuning.py       random search with a run log
+  metrics.py      PR-AUC, ROC-AUC, precision, recall, F1, top-10% lift, by group
+  placeholder.py  synthetic stand-in data, for running the code before the real data is ready
 tests/          unit tests (pytest)
 models/         saved model artefacts, git-ignored
 reports/        figures and write-ups

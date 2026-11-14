@@ -39,3 +39,6 @@ lightning_logs/
 .DS_Store
 Thumbs.db
 ~$*
+
+# Outputs produced from the synthetic placeholder data: never commit or report these
+reports/*_PLACEHOLDER.csv
