@@ -1,6 +1,6 @@
 # Minimum libraries for 01_baselines.ipynb and src/data_prep.py
 pandas>=2.2
-numpy>=1.26
+numpy>=1.26,<=2.5.4        # 2.5.5 is blocked by Windows Smart App Control on some of our laptops
 scikit-learn>=1.5,<1.9   # 1.9.1 is blocked by Windows Smart App Control on some of our laptops
 lightgbm>=4.3
 matplotlib>=3.9
