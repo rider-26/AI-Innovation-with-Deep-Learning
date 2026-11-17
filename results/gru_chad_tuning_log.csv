@@ -1,0 +1,8 @@
+run,static,epochs,val_pr_auc,seconds,weeks,hidden,cell,dropout
+"r6 hybrid, dropout 0.1",True,10,0.5661,53.0,,,,0.1
+"r4 hybrid, hidden 32",True,9,0.566,25.7,,32,,
+"r2 GRU + static, 52w (hybrid)",True,10,0.5653,52.3,,,,
+"r7 hybrid, dropout 0.5",True,10,0.5651,52.9,,,,0.5
+"r3 hybrid, 26 weeks",True,10,0.5651,24.3,26,,,
+"r5 hybrid, LSTM instead of GRU",True,11,0.5643,34.1,,,LSTM,
+"r1 GRU, weekly only, 52w",False,25,0.5602,0.0,,,,
