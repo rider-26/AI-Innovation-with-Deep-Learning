@@ -34,6 +34,8 @@ current) and put a name and a date on each one. Unowned tasks don't get done.
 - [ ] Baselines: always-0, recency rule, logistic regression, LightGBM
 - [ ] Each member: own deep learning variant (plain MLP / MLP with embeddings / GRU or LSTM over
       weekly activity / wide-and-deep or TabNet)
+  - [x] MLP with category embeddings, with tuning log and test evaluation: Leon, 17 Nov 2026
+        (`notebooks/04_mlp_embeddings_leon.ipynb`)
 - [ ] Tuning log for every run: this is the evidence of optimisation
 - [ ] Evaluation on the shared split: PR-AUC (main), ROC-AUC, precision, recall, F1, confusion
       matrix, precision in the top 10%. Accuracy only next to the 85.4% floor
