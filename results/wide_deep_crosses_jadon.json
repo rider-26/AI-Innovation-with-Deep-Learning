@@ -1,0 +1,39 @@
+{
+  "crosses": [
+    [
+      "customer_tier",
+      "orders_90d"
+    ],
+    [
+      "days_since_last_order",
+      "sessions_90d"
+    ],
+    [
+      "customer_tier",
+      "sessions_30d"
+    ],
+    [
+      "sessions_90d",
+      "orders_365d"
+    ],
+    [
+      "customer_tier",
+      "spend_90d"
+    ],
+    [
+      "customer_tier",
+      "days_since_last_order"
+    ],
+    [
+      "days_since_last_order",
+      "orders_365d"
+    ],
+    [
+      "customer_tier",
+      "sessions_90d"
+    ]
+  ],
+  "rule": "val_logloss_gain > 0 and p_value < 0.001, at most 8, ranked by val_logloss_gain",
+  "screened_pairs": 46,
+  "made_by": "notebooks/wide_deepEDA.ipynb"
+}

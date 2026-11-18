@@ -65,16 +65,43 @@ def recency_bucket(days: pd.Series) -> pd.Series:
     return pd.cut(days.astype(float), bins=edges, labels=RECENCY_LABELS, right=True).astype(str)
 
 
+def range_labels(edges: np.ndarray, integer: bool) -> list[str]:
+    """Readable names for the ranges between edges. Range i holds edges[i-1] <= value < edges[i].
+
+    Whole-number columns get "0", "1-2", "3+"; other columns get "<12.5", "12.5-40", ">=40".
+    """
+    labels = []
+    for i in range(len(edges) + 1):
+        lo = edges[i - 1] if i > 0 else None
+        hi = edges[i] if i < len(edges) else None
+        if integer:
+            if lo is None:
+                labels.append(f"<={hi - 1:g}")
+            elif hi is None:
+                labels.append(f"{lo:g}+")
+            else:
+                labels.append(f"{lo:g}" if hi - 1 == lo else f"{lo:g}-{hi - 1:g}")
+        elif lo is None:
+            labels.append(f"<{hi:.3g}")
+        elif hi is None:
+            labels.append(f">={lo:.3g}")
+        else:
+            labels.append(f"{lo:.3g}-{hi:.3g}")
+    return labels
+
+
 class Bucketizer:
-    """Turn each numeric column into text labels for its range ("q1".."q5" or recency buckets).
+    """Turn each numeric column into text labels for its range (e.g. "0", "1-2", "3+").
 
     The edges are learned from TRAIN only:
       - days_since_last_order: the fixed business buckets above;
       - a column with 6 or fewer distinct values (a flag or a small count): each value is its
         own bucket;
       - any other number: quantile buckets (default 5), so each bucket holds about the same
-        number of train customers.
+        number of train customers. Many customers share the same value (often 0), so equal
+        quantiles are merged and a column can end up with fewer buckets.
     Text columns pass through unchanged. Missing numbers get their own bucket, "missing".
+    `order_[col]` lists a numeric column's labels from low to high, for tables and charts.
     """
 
     def __init__(self, n_buckets: int = 5):
@@ -82,17 +109,26 @@ class Bucketizer:
 
     def fit(self, X: pd.DataFrame, columns: list[str]) -> Bucketizer:
         self.columns_ = list(columns)
-        self.edges_ = {}
+        self.edges_, self.labels_, self.order_ = {}, {}, {}
         for col in self.columns_:
             s = X[col]
-            if col == RECENCY_COL or not pd.api.types.is_numeric_dtype(s):
+            if col == RECENCY_COL:
+                self.order_[col] = list(RECENCY_LABELS)
+                continue
+            if not pd.api.types.is_numeric_dtype(s):
                 continue
             values = s.dropna().unique()
             if len(values) <= 6:
                 self.edges_[col] = None  # small set of values: use them as they are
+                self.order_[col] = [f"{v:g}" for v in sorted(values)]
             else:
                 qs = np.linspace(0, 1, self.n_buckets + 1)[1:-1]
-                self.edges_[col] = np.unique(np.quantile(s.dropna(), qs))
+                edges = np.unique(np.quantile(s.dropna(), qs))
+                integer = bool(np.all(np.mod(s.dropna(), 1) == 0))
+                self.edges_[col] = edges
+                self.labels_[col] = range_labels(edges, integer)
+                self.order_[col] = list(self.labels_[col])
+            self.order_[col].append("missing")
         return self
 
     def transform(self, X: pd.DataFrame) -> pd.DataFrame:
@@ -108,7 +144,8 @@ class Bucketizer:
             else:
                 # np.searchsorted gives 0..n_buckets-1: which range the value falls in
                 idx = np.searchsorted(self.edges_[col], s.to_numpy(dtype=float), side="right")
-                labels = pd.Series([f"q{i + 1}" for i in idx], index=s.index)
+                names = self.labels_[col]
+                labels = pd.Series([names[i] for i in idx], index=s.index)
                 out[col] = labels.where(s.notna(), "missing")
         return pd.DataFrame(out, index=X.index)
 
