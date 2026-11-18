@@ -8,6 +8,7 @@ dependencies = [
     # Data and classical ML (baselines, preprocessing, metrics)
     "pandas>=2.2",
     "numpy>=1.26",
+    "scipy>=1.13",  # chi-squared p-values in src/wide_deep.py
     "scikit-learn>=1.5",
     "lightgbm>=4.3",
     # Deep learning model
