@@ -104,6 +104,7 @@ data/
   interim/      cleaned tables
   processed/    features.csv and split assignments
   synthetic/    anything we generate, labelled as synthetic
+knime/          KNIME workflows for cleaning and the feature table (.knwf, exported without data)
 notebooks/      audit, EDA, baselines, one deep learning notebook per member
 src/shopsphere/ shared Python package
   config.py     seed, cutoff date, paths, split fractions
@@ -155,7 +156,7 @@ specific finding, a specific action. The log must agree with your commit history
 
 | Member | GitHub | Role | Model variant | Agent tool |
 |---|---|---|---|---|
-| Davian | dav_1ann | | | |
+| Davian | dav_1ann | Data cleaning and feature table (KNIME), EDA, repo set-up, baselines | Plain MLP | To assign before PR2 |
 | | | | | |
 | | | | | |
 | | | | | |
