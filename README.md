@@ -104,6 +104,7 @@ data/
   interim/      cleaned tables
   processed/    features.csv and split assignments
   synthetic/    anything we generate, labelled as synthetic
+knime/          KNIME workflows for cleaning and the feature table (.knwf, exported without data)
 notebooks/      audit, EDA, baselines, one deep learning notebook per member
 src/shopsphere/ shared Python package
   config.py     seed, cutoff date, paths, split fractions
@@ -155,12 +156,29 @@ specific finding, a specific action. The log must agree with your commit history
 
 | Member | GitHub | Role | Model variant | Agent tool |
 |---|---|---|---|---|
-| Davian | dav_1ann | | | |
-| | | | | |
-| | | | | |
-| | | | | |
+| Jadon | Juguem | **Team leader**; interaction screen and wide-and-deep EDA | Wide-and-deep | To assign before PR2 |
+| Davian | dav_1ann | Data cleaning and feature table (KNIME), EDA, repo set-up, baselines | Plain MLP | To assign before PR2 |
+| Leon | rider-26 | Repo owner; embedding MLP module and unit tests | MLP with category embeddings | To assign before PR2 |
+| Chad | chadkktan | Weekly activity sequences (`src/weekly_sequences.py`) and weekly EDA | GRU over weekly activity | To assign before PR2 |
 
 Supervisor: Mr Wee Chee Hong.
+
+### Model variants at PR1
+
+All on the shared 70/15/15 split with `SEED = 42`, scored by the same `evaluate()`. Test PR-AUC
+(random = 0.146):
+
+| Model | Owner | Test PR-AUC | Test ROC-AUC | Results |
+|---|---|---|---|---|
+| Logistic regression (baseline) | Davian | 0.577 | 0.873 | `results/baseline_results.csv` |
+| LightGBM (baseline) | Davian | 0.576 | 0.874 | `results/baseline_results.csv` |
+| Plain MLP | Davian | 0.574 | 0.875 | `results/mlp_results_davian.csv` |
+| MLP with category embeddings | Leon | 0.575 | 0.875 | `results/mlp_embeddings_results.csv` |
+| GRU hybrid (weekly + static) | Chad | 0.587 | 0.878 | `results/gru_chad_results.csv` |
+| Wide-and-deep | Jadon | 0.581 | 0.875 | `results/wide_deep_jadon_results.csv` |
+
+Every deep learning variant lands within about 0.01 PR-AUC of the baselines. The models were
+chosen on validation, where the gaps are smaller still, so no variant has yet shown a clear win.
 
 ## Documents
 
